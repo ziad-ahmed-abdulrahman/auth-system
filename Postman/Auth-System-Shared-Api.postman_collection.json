@@ -1,0 +1,590 @@
+{
+  "info": {
+    "_postman_id": "b83d7aa8-e9b4-4bb6-9340-e8b4d6869dec",
+    "name": "Auth System Api",
+    "description": "The **Auth System API** is a secure, scalable, and centralized identity management service. It is designed to handle user authentication, authorization, and account security management. Built with a focus on protection and reliability, it ensures that only verified users can access sensitive resources within the system.\n\n### **🌐 Base URL Configuration**\n\nAll API requests must be prefixed with the following **Base URL**. Any endpoint mentioned in this documentation is a sub-path of this main address:\n\n**Development:** `https://localhost:xxxx`\n\n**Production:** `https://api.yourdomain.com`\n\n**Note:** Every endpoint listed in the following sections must be appended to the Base URL. For example:\n\n`Base URL` + `/api/auth/login`",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "50243565",
+    "_collection_link": "https://go.postman.co/collection/50243565-b83d7aa8-e9b4-4bb6-9340-e8b4d6869dec?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Guest",
+      "item": [
+        {
+          "name": "Regsiter",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"{{user_email}}\",\r\n  \"password\": \"{{user_password}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/accounts/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                "register"
+              ]
+            },
+            "description": "- **Description**: Create a new user account.\n    \n- **Function**: Accepts user credentials (Username, Email, Password) and stores a new record in the database with an \"Inactive\" status until verified."
+          },
+          "response": []
+        },
+        {
+          "name": "Send Activation Account Code",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"{{user_email}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/accounts/account-activations",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                "account-activations"
+              ]
+            },
+            "description": "- **Description**: Initiate the email verification process.\n    \n- **Function**: Generates and sends a numeric OTP to the user's registered email to confirm ownership and activate the account."
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Activation Account Code",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"{{user_email}}\",\r\n     \"code\": \"224256\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/accounts/account-activations/verify",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                "account-activations",
+                "verify"
+              ]
+            },
+            "description": "- **Description**: Confirm account ownership.\n    \n- **Function**: Validates the OTP provided by the user. If correct, the account status is updated to \"Active.\""
+          },
+          "response": []
+        },
+        {
+          "name": "Send Reset Password Code",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"{{user_email}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/accounts/account-resets",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                "account-resets"
+              ]
+            },
+            "description": "- **Description**: Request a password recovery for forgotten Password.\n    \n- **Function**: Verifies the existence of the email and sends a secure reset code to allow the user to bypass the old password"
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Reset Password Code",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"{{user_email}}\",\r\n    \"code\": \"760800\",\r\n    \"newPassword\": \"{{user_reset_password}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/accounts/account-resets/verify",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                "account-resets",
+                "verify"
+              ]
+            },
+            "description": "- **Description**: Authorize the password reset.\n    \n- **Function**: Validates the recovery code and its expiration. Upon success, it grants the user permission to set a new password.\n    \n- This action performs a **Global Logout**. It will immediately invalidate every active session (Mobile, Web, etc.) by clearing all **Refresh Tokens** and rotating the **Security Stamp**. Any existing **Access Token** will be rejected on the next request."
+          },
+          "response": []
+        },
+        {
+          "name": "Send Change Password code",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"{{user_email}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/accounts/account-passwordchanges",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                "account-passwordchanges"
+              ]
+            },
+            "description": "- **Description**: Request a security-based password update.\n    \n- **Function**: Sends a verification code to ensure the user requesting the change is the actual account owner, often used as a Multi-Factor Authentication (MFA) step."
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Change Password Code",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"{{user_email}}\",\r\n    \"code\": \"325548\",\r\n    \"newPassword\": \"{{user_password}}\",\r\n    \"oldPassword\": \"{{user_reset_password}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/accounts/account-passwordchanges/verify",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                "account-passwordchanges",
+                "verify"
+              ]
+            },
+            "description": "- **Description**: Finalize the password update.\n    \n- **Function**: Validates the code and updates the `PasswordHash` in the database with the newly provided password.\n    \n- This action performs a **Global Logout**. It will immediately invalidate every active session (Mobile, Web, etc.) by clearing all **Refresh Tokens** and rotating the **Security Stamp**. Any existing **Access Token** will be rejected on the next request."
+          },
+          "response": []
+        },
+        {
+          "name": "login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {\r",
+                  "    var response = pm.response.json();\r",
+                  "    \r",
+                  "    \r",
+                  "    if (response.data && response.data.token) {\r",
+                  "        pm.environment.set(\"token\", response.data.token);  \r",
+                  "    }\r",
+                  "\r",
+                  "    if (response.data && response.data.refreshToken) {\r",
+                  "        pm.environment.set(\"refresh_token\", response.data.refreshToken);  \r",
+                  "    }\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"{{user_email}}\",\r\n  \"password\": \"{{user_password}}\"\r\n}\r\n\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/accounts/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                "login"
+              ]
+            },
+            "description": "- Authenticate user and send a **JWT (Access Token)** along with a **Refresh Token**.\n    \n- **Function**: Validates credentials against the database and returns a **JWT (JSON Web Token)** for authorization and a **Refresh Token** for session persistence if the account is active. This allows the client to renew the Access Token without requiring the user to re-enter their password."
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {\r",
+                  "    var response = pm.response.json();\r",
+                  "    \r",
+                  "    \r",
+                  "    if (response.data && response.data.token) {\r",
+                  "        pm.environment.set(\"token\", response.data.token);  \r",
+                  "    }\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"refreshToken\": \"RWAfLhXi2nIiWH0ALQ6GtZFu3y8BaGtX68UYCFwd4BmEtz2CrfKXZ5OUqbnkD1uyMLmPlw4Jy1pRIJKAQmF7UA==\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/accounts/refresh-token",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                "refresh-token"
+              ]
+            },
+            "description": "### **1\\. Description**\n\nExchange an expired **JWT (Access Token)** for a new one using a **Refresh Token**.\n\n---\n\n### **2\\. Function**\n\nValidates the provided **Refresh Token** against the database and returns a new **JWT (JSON Web Token)** for authorization and a new **Refresh Token** for session persistence if the account is active. This allows the client to renew the Access Token without requiring the user to re-enter their password, while implementing **Token Rotation** for enhanced security."
+          },
+          "response": []
+        }
+      ],
+      "description": "The **Guest Panel** is a collection of public endpoints that do not require an authorization token for access. It handles the initial user journey, including account creation, identity verification through One-Time Passwords (OTP), and secure authenticationز"
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Get me",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"{{user_email}}\",\r\n  \"password\": \"{{user_password}}\"\r\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/accounts/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                "me"
+              ]
+            },
+            "description": "- **Description:** Retrieves the profile information of the currently authenticated user.\n    \n- **Auth:** Requires a valid User JWT."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Me",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"phoneNumber\": \"01018930588\",\r\n  \"firstName\": \"string\",\r\n  \"lastName\": \"string\",\r\n  \"street\": \"string\",\r\n  \"city\": \"string\",\r\n  \"state\": \"string\",\r\n  \"zipCode\": \"string\",\r\n  \"country\": \"string\",\r\n  \"government\": \"string\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/accounts/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                "me"
+              ]
+            },
+            "description": "- **Description:** Updates personal details for the logged-in user (e.g., Name, Phone, Address).\n    \n- **Auth:** Requires a valid User JWT."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Me",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/accounts/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                "me"
+              ]
+            },
+            "description": "- Initiates a **Soft Delete** process for the authenticated user's account. The account will be immediately deactivated (`IsActive = false`), and all personal data will be scheduled for **permanent removal** after a specific grace period (e.g., 30 days).\n    \n- **Auth:** Requires a valid User JWT."
+          },
+          "response": []
+        }
+      ],
+      "description": "This collection of endpoints contains private endpoints that require a valid JSON Web Token (JWT) for access. Once a user is authenticated , they can interact with these services to manage their personal data and account settings."
+    },
+    {
+      "name": "Admin & Manager",
+      "item": [
+        {
+          "name": "Add User",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"{{user_email}}\",\r\n  \"password\": \"{{user_password}}\",\r\n  \"role\": \"User\"\r\n}\r\n\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/accounts",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "accounts"
+              ]
+            },
+            "description": "- **Description:** Creates a new user account directly from the management panel.\n    \n- **Auth:** Restricted to **Admin** or **Manager** roles; cannot add higher-ranking roles."
+          },
+          "response": []
+        },
+        {
+          "name": "Get User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/accounts/a1b2c3d4-e5f6-4a5b-bc6d-7e8f9a0b1c2d",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                "a1b2c3d4-e5f6-4a5b-bc6d-7e8f9a0b1c2d"
+              ]
+            },
+            "description": "- **Description:** Fetches specific details of a single user using their unique ID.\n    \n- **Auth:** Restricted to **Admin** or **Manager** roles."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Many Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/accounts?sort=EmailAsc&Search=&Pagenumber=1&MaxPageSize=6&PageSize=3",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "accounts"
+              ],
+              "query": [
+                {
+                  "key": "sort",
+                  "value": "EmailAsc"
+                },
+                {
+                  "key": "Search",
+                  "value": ""
+                },
+                {
+                  "key": "Pagenumber",
+                  "value": "1"
+                },
+                {
+                  "key": "MaxPageSize",
+                  "value": "6"
+                },
+                {
+                  "key": "PageSize",
+                  "value": "3"
+                }
+              ]
+            },
+            "description": "Description: Retrieves a paginated and searchable list of all registered users. This endpoint is designed for administrative oversight, allowing managers to filter through the user base efficiently.\n\nKey Features:\n\nAccess Control: Restricted to users with Admin or Manager roles.\n\nSearch: Multi-word search across UserName and Email fields (Case-insensitive).\n\nSorting: Supports dynamic sorting by Name or Email in both ascending and descending order.\n\nSmart Pagination: Returns total count, page size, and total pages to facilitate frontend pagination controls.\n\nDynamic Messaging: Provides contextual feedback if the list is empty or if the requested page exceeds the total count.\n\nQuery Parameters:\n\n<img src=\"https://content.pstmn.io/c5ea6014-f83c-4538-b8a1-a2288faeb053/aW1hZ2UucG5n\" alt=\"\" height=\"281\" width=\"785\">\n\nAuth: Requires a valid Admin/Manager JWT."
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"phoneNumber\": \"011\",\r\n  \"firstName\": \"zzz\",\r\n  \"lastName\": \"aatra\",\r\n  \"street\": \"zagzig\",\r\n  \"city\": \"string\",\r\n  \"state\": \"string\",\r\n  \"zipCode\": \"string\",\r\n  \"country\": \"string\",\r\n  \"government\": \"string\",\r\n  \"isActive\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/accounts/5f2d9e8a-b1c4-4e7a-9d6b-3f2a1c5d8e90",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                "5f2d9e8a-b1c4-4e7a-9d6b-3f2a1c5d8e90"
+              ]
+            },
+            "description": "- **Description:** Modifies a specific user's data or status (e.g., activating/deactivating) by their ID.\n    \n- **Auth:** Restricted to **Admin/Manager**; cannot update higher-ranking roles."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{base_url}}/api/accounts/a1b2c3d4-e5f6-4a5b-bc6d-7e8f9a0b1c2d",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                "a1b2c3d4-e5f6-4a5b-bc6d-7e8f9a0b1c2d"
+              ]
+            },
+            "description": "- **Description:** Removes a user account from the system via their ID.\n    \n- **Auth:** Restricted to **Admin** or **Manager** roles; cannot delete higher-ranking roles.."
+          },
+          "response": []
+        }
+      ],
+      "description": "This folder contains administrative endpoints restricted to users with **Admin** or **Manager** roles. It allows for system-wide oversight, user account control, and operational management."
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
